@@ -9,13 +9,15 @@ local elapsedTime = 0 -- used later to control the time each frame is shown
 
 -- Spawn hearts function
 local function spawnHearts(frame)
-    for y = 1, #frame do -- rows
-        for x = 1, #frame[y] do -- columns
-            local heartType = HeartSubType.HEART_BLACK -- heart type that will be shown. black by default
-            if frame[y][x] == 1 then
-                heartType = HeartSubType.HEART_ETERNAL
+    if #frames >= currentFrame then
+         for y = 1, #frame do -- rows
+            for x = 1, #frame[y] do -- columns
+                local heartType = HeartSubType.HEART_BLACK -- heart type that will be shown. black by default
+                if frame[y][x] == 1 then
+                    heartType = HeartSubType.HEART_ETERNAL
+                end
+                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, heartType, Vector((x-1)*30 + 110, (y-1)*20 + 150), Vector(0, 0), nil) -- spawn the heart
             end
-            Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, heartType, Vector((x-1)*30 + 110, (y-1)*20 + 150), Vector(0, 0), nil) -- spawn the heart
         end
     end
 end
@@ -33,13 +35,13 @@ end
 function badApple:Play(_)
     if badAppleHasStarted then
         if elapsedTime == 0 then
+            removeHearts()
             spawnHearts(frames[currentFrame])
             currentFrame = currentFrame + 1
         end
         elapsedTime = elapsedTime + 1
-        if elapsedTime >= 3 then
+        if elapsedTime >= 2 then
             elapsedTime = 0
-            removeHearts()
         end
     end
 end
